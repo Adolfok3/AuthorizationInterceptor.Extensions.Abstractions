@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationInterceptor.Extensions.Abstractions", "src\AuthorizationInterceptor.Extensions.Abstractions.csproj", "{C61CD3D8-C0F7-422C-BB7A-ADD2402B38BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationInterceptor.Extensions.Abstractions.Tests", "tests\AuthorizationInterceptor.Extensions.Abstractions.Tests\AuthorizationInterceptor.Extensions.Abstractions.Tests.csproj", "{38487C73-1BD4-4225-8805-69FA880F04F1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C61CD3D8-C0F7-422C-BB7A-ADD2402B38BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C61CD3D8-C0F7-422C-BB7A-ADD2402B38BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C61CD3D8-C0F7-422C-BB7A-ADD2402B38BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C61CD3D8-C0F7-422C-BB7A-ADD2402B38BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38487C73-1BD4-4225-8805-69FA880F04F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38487C73-1BD4-4225-8805-69FA880F04F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38487C73-1BD4-4225-8805-69FA880F04F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38487C73-1BD4-4225-8805-69FA880F04F1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CEB0366D-6916-49F0-8B41-5C6391E11A4C}
+	EndGlobalSection
+EndGlobal
