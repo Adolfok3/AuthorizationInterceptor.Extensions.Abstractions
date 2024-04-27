@@ -10,8 +10,7 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Json
     {
         public override AuthorizationHeaders Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (Activator.CreateInstance(typeof(AuthorizationHeaders), true) is not AuthorizationHeaders authorizationHeaders)
-                throw new JsonException("Unable to create an AuthorizationHeaders instance.");
+            var authorizationHeaders = (AuthorizationHeaders)Activator.CreateInstance(typeof(AuthorizationHeaders), true)!;
 
             while (reader.Read())
             {
