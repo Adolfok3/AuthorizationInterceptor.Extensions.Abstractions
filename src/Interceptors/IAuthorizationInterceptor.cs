@@ -8,20 +8,23 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Interceptors
     /// </summary>
     public interface IAuthorizationInterceptor
     {
+
         /// <summary>
         /// Retrieves the current set of authorization headers.
         /// </summary>
+        /// <param name="name">Name of the integration or HttpClient</param>
         /// <returns>
         /// <see cref="AuthorizationHeaders"/> containing the authorization headers.
         /// </returns>
-        Task<AuthorizationHeaders?> GetHeadersAsync();
+        Task<AuthorizationHeaders?> GetHeadersAsync(string name);
 
         /// <summary>
         /// Update the current set of authorization headers.
         /// </summary>
+        /// <param name="name">Name of the integration or HttpClient</param>
         /// <param name="expiredHeaders">The old expired headers</param>
         /// <param name="newHeaders">The new valid headers</param>
         /// <returns></returns>
-        Task UpdateHeadersAsync(AuthorizationHeaders? expiredHeaders, AuthorizationHeaders? newHeaders);
+        Task UpdateHeadersAsync(string name, AuthorizationHeaders? expiredHeaders, AuthorizationHeaders? newHeaders);
     }
 }
