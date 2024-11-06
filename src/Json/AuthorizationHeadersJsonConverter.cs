@@ -82,7 +82,7 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Json
             writer.WriteEndObject();
         }
 
-        private void SetOAuthHeaders(ref Utf8JsonReader reader, JsonSerializerOptions options, AuthorizationHeaders authorizationHeaders)
+        private static void SetOAuthHeaders(ref Utf8JsonReader reader, JsonSerializerOptions options, AuthorizationHeaders authorizationHeaders)
         {
             var oAuthHeadersJson = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
             
@@ -101,7 +101,7 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Json
             SetProperty(authorizationHeaders, "OAuthHeaders", new OAuthHeaders(accessToken, tokenType, expiresIn, refreshToken, scope));
         }
 
-        private void SetHeaders(ref Utf8JsonReader reader, AuthorizationHeaders authorizationHeaders)
+        private static void SetHeaders(ref Utf8JsonReader reader, AuthorizationHeaders authorizationHeaders)
         {
             while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
             {
@@ -118,18 +118,13 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Json
             }
         }
 
-        private void SetProperty<TValue>(AuthorizationHeaders obj, string propertyName, TValue value)
+        private static void SetProperty<TValue>(AuthorizationHeaders obj, string propertyName, TValue value)
         {
             var propertyInfo = obj.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             propertyInfo?.SetValue(obj, value, null);
         }
 
-        public string? RequireStringProperty(JsonElement oAuthHeadersJson, string propertyName)
-        {
-            if (!oAuthHeadersJson.TryGetProperty(propertyName, out var property))
-                return null;
-
-            return property.GetString();
-        }
+        private static string? RequireStringProperty(JsonElement oAuthHeadersJson, string propertyName)
+            => !oAuthHeadersJson.TryGetProperty(propertyName, out var property) ? null : property.GetString();
     }
 }

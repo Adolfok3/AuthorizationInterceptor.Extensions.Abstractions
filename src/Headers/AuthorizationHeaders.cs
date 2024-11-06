@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace AuthorizationInterceptor.Extensions.Abstractions.Headers
 {
     /// <summary>
-    /// Represents the headers returned by a authorization interceptor process or authentication method and including expiration information.
+    /// Represents the headers returned by an authorization interceptor process or authentication method and including expiration information.
     /// </summary>
     public class AuthorizationHeaders : Dictionary<string, string>
     {
         /// <summary>
-        /// Obtém as propriedades do OAuth depois de definidas no método de autenticação.
+        /// Get auth headers in an OAuth settings
         /// </summary>
         public OAuthHeaders? OAuthHeaders { get; private set; }
 
@@ -50,20 +50,20 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Headers
             Add("Authorization", $"{oAuthHeaders.TokenType} {oAuthHeaders.AccessToken}");
         }
 
-        private AuthorizationHeaders()
-        {
-        }
-
         public static implicit operator AuthorizationHeaders(OAuthHeaders headers)
         {
             ValidateValue(nameof(headers.AccessToken), headers.AccessToken);
             ValidateValue(nameof(headers.TokenType), headers.TokenType);
-            if (headers.ExpiresIn.HasValue && headers.ExpiresIn.Value <= 0)
+            if (headers.ExpiresIn is <= 0)
                 throw new ArgumentException("ExpiresIn must be greater tha 0.");
 
             return new AuthorizationHeaders(headers);
         }
-
+        
+        private AuthorizationHeaders()
+        {
+        }
+        
         private static void ValidateValue(string name, string value)
         {
             if (string.IsNullOrEmpty(value))

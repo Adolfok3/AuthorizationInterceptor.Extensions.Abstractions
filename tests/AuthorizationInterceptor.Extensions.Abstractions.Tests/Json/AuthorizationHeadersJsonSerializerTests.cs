@@ -138,7 +138,7 @@ public class AuthorizationHeadersJsonSerializerTests
         //Assert
         Assert.NotNull(headers);
         Assert.NotEmpty(headers);
-        Assert.Contains(headers, a => a.Key == "Header1" && a.Value == "Value1");
+        Assert.Contains(headers, a => a is { Key: "Header1", Value: "Value1" });
         Assert.Null(headers.OAuthHeaders);
         Assert.NotNull(headers.ExpiresIn);
         Assert.Equal(TimeSpan.FromMinutes(3), headers.ExpiresIn.Value);
@@ -164,7 +164,7 @@ public class AuthorizationHeadersJsonSerializerTests
         //Assert
         Assert.NotNull(headers);
         Assert.NotEmpty(headers);
-        Assert.Contains(headers, a => a.Key == "Header1" && a.Value == "Value1");
+        Assert.Contains(headers, a => a is { Key: "Header1", Value: "Value1" });
         Assert.NotNull(headers.OAuthHeaders);
         Assert.Equal("AccessToken", headers.OAuthHeaders.AccessToken);
         Assert.Equal("Basic", headers.OAuthHeaders.TokenType);
