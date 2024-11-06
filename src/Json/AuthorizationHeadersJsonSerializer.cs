@@ -11,7 +11,7 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Json
         /// <summary>
         /// Custom converter used to print or save in a format where data loss does not occur.
         /// </summary>
-        public static JsonSerializerOptions DefaultOptions { get; } = new JsonSerializerOptions
+        public static JsonSerializerOptions DefaultOptions { get; } = new()
         {
             Converters = { new AuthorizationHeadersJsonConverter() }
         };
