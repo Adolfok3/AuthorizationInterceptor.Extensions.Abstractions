@@ -59,7 +59,11 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Headers
 
             return new AuthorizationHeaders(headers);
         }
-
+        
+        private AuthorizationHeaders()
+        {
+        }
+        
         private static void ValidateValue(string name, string value)
         {
             if (string.IsNullOrEmpty(value))
