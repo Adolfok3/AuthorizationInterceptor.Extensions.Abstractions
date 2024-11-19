@@ -14,4 +14,4 @@ For more information about AuthorizationInterceptor main package on how to confi
 ### Available Interceptors
 
 - [AuthorizationInterceptor.Extensions.MemoryCache](https://github.com/Adolfok3/AuthorizationInterceptor.Extensions.MemoryCache)
-- [AuthorizationInterceptor.Extensions.Redis](https://github.com/Adolfok3/AuthorizationInterceptor.Extensions.Redis)
+- [AuthorizationInterceptor.Extensions.DistributedCache](https://github.com/Adolfok3/AuthorizationInterceptor.Extensions.DistributedCache)
