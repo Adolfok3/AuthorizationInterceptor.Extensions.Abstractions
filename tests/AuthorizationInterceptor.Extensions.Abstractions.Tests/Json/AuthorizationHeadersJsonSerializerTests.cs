@@ -48,7 +48,7 @@ public class AuthorizationHeadersJsonSerializerTests
     public void Serialiaze_WithOAuthProperties_ShouldSerialize()
     {
         //Arrange
-        AuthorizationHeaders headers = new OAuthHeaders("AccessToken", "TokenType", 12345, "RefreshToken", "Scope");
+        AuthorizationHeaders headers = new OAuthHeaders("AccessToken", "TokenType", 12345, "RefreshToken", 54321);
 
         //Act
         var json = AuthorizationHeadersJsonSerializer.Serialize(headers);
@@ -56,8 +56,8 @@ public class AuthorizationHeadersJsonSerializerTests
         //Assert
         Assert.NotEmpty(json);
         Assert.Contains(@"""Headers"":{""Authorization"":""TokenType AccessToken""}", json);
-        Assert.Contains(@"""ExpiresIn"":""03:25:45""", json);
-        Assert.Contains(@"""OAuthHeaders"":{""AccessToken"":""AccessToken"",""TokenType"":""TokenType"",""ExpiresIn"":""12345"",""RefreshToken"":""RefreshToken"",""Scope"":""Scope""}", json);
+        Assert.Contains(@"""ExpiresIn"":""15:05:21""", json);
+        Assert.Contains(@"""OAuthHeaders"":{""AccessToken"":""AccessToken"",""TokenType"":""TokenType"",""ExpiresIn"":""12345"",""RefreshToken"":""RefreshToken"",""ExpiresInRefreshToken"":""54321""}", json);
         Assert.Contains(@$"""AuthenticatedAt"":""{DateTimeOffset.UtcNow.Date:yyyy-MM-dd}", json);
     }
 
@@ -171,7 +171,7 @@ public class AuthorizationHeadersJsonSerializerTests
         Assert.NotNull(headers.OAuthHeaders.ExpiresIn);
         Assert.Equal(120, headers.OAuthHeaders.ExpiresIn.Value);
         Assert.Null(headers.OAuthHeaders.RefreshToken);
-        Assert.Null(headers.OAuthHeaders.Scope);
+        Assert.Null(headers.OAuthHeaders.ExpiresInRefreshToken);
         Assert.NotNull(headers.ExpiresIn);
         Assert.Equal(TimeSpan.FromMinutes(3), headers.ExpiresIn.Value);
         Assert.Equal(@"""2024-04-05T19:47:35.1564179+00:00""", JsonSerializer.Serialize(headers.AuthenticatedAt));

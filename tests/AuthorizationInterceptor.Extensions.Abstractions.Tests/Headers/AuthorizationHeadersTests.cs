@@ -38,11 +38,11 @@ public class AuthorizationHeadersTests
     public void CreateAuthorizationHeaders_FromOAuth_WithCorrectProperties_ShouldCreateCorrectly()
     {
         //Arrange
-        AuthorizationHeaders headers = new OAuthHeaders("Token", "Bearer", 3000, "refreskToken", "client_credentials");
+        AuthorizationHeaders headers = new OAuthHeaders("Token", "Bearer", 3000, "refreskToken", 5000);
 
         //Assert
         Assert.NotNull(headers.ExpiresIn);
-        Assert.Equal(TimeSpan.FromSeconds(3000), headers.ExpiresIn);
+        Assert.Equal(TimeSpan.FromSeconds(5000), headers.ExpiresIn);
         Assert.NotEmpty(headers);
         Assert.Contains(headers, a => a.Key == "Authorization" && a.Value == "Bearer Token");
         Assert.NotEqual(DateTimeOffset.MinValue, headers.AuthenticatedAt);
@@ -51,7 +51,7 @@ public class AuthorizationHeadersTests
         Assert.Equal("Bearer", headers.OAuthHeaders.TokenType);
         Assert.Equal(3000, headers.OAuthHeaders.ExpiresIn);
         Assert.Equal("refreskToken", headers.OAuthHeaders.RefreshToken);
-        Assert.Equal("client_credentials", headers.OAuthHeaders.Scope);
+        Assert.Equal(5000, headers.OAuthHeaders.ExpiresInRefreshToken);
     }
 
     [Fact]
@@ -74,15 +74,18 @@ public class AuthorizationHeadersTests
         var entryWithToken = new OAuthHeaders("test", "");
         var entryWithType = new OAuthHeaders("", "test");
         var entryExpires = new OAuthHeaders("test", "test", -30000);
+        var entryWithRefreshTokenWithoutExpiration = new OAuthHeaders("test", "test", 30000, "refreshtoken", null);
 
         //Act
         var act1 = () => (AuthorizationHeaders)entryWithToken;
         var act2 = () => (AuthorizationHeaders)entryWithType;
         var act3 = () => (AuthorizationHeaders)entryExpires;
+        var act4 = () => (AuthorizationHeaders)entryWithRefreshTokenWithoutExpiration;
 
         //Assert
         Assert.Equal("Property 'TokenType' is required.", Assert.Throws<ArgumentException>(act1).Message);
         Assert.Equal("Property 'AccessToken' is required.", Assert.Throws<ArgumentException>(act2).Message);
         Assert.Equal("ExpiresIn must be greater tha 0.", Assert.Throws<ArgumentException>(act3).Message);
+        Assert.Equal("ExpiresInRefreshToken must be greater than 0 if RefreshToken is provided.", Assert.Throws<ArgumentException>(act4).Message);
     }
 }
