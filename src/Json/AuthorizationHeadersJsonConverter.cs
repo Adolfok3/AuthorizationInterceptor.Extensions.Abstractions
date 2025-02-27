@@ -76,7 +76,7 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Json
             writer.WriteString("TokenType", value.OAuthHeaders?.TokenType);
             writer.WriteString("ExpiresIn", value.OAuthHeaders?.ExpiresIn?.ToString());
             writer.WriteString("RefreshToken", value.OAuthHeaders?.RefreshToken);
-            writer.WriteString("Scope", value.OAuthHeaders?.Scope);
+            writer.WriteString("ExpiresInRefreshToken", value.OAuthHeaders?.ExpiresInRefreshToken?.ToString());
             writer.WriteEndObject();
 
             writer.WriteEndObject();
@@ -97,8 +97,9 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Json
             var expiresInValue = RequireStringProperty(oAuthHeadersJson, "ExpiresIn");
             double? expiresIn = string.IsNullOrEmpty(expiresInValue) ? null : double.Parse(expiresInValue);
             var refreshToken = RequireStringProperty(oAuthHeadersJson, "RefreshToken");
-            var scope = RequireStringProperty(oAuthHeadersJson, "Scope");
-            SetProperty(authorizationHeaders, "OAuthHeaders", new OAuthHeaders(accessToken, tokenType, expiresIn, refreshToken, scope));
+            var expiresInRefreshTokenString = RequireStringProperty(oAuthHeadersJson, "ExpiresInRefreshToken");
+            double? expiresInRefreshToken = string.IsNullOrEmpty(expiresInRefreshTokenString) ? null : double.Parse(expiresInRefreshTokenString);
+            SetProperty(authorizationHeaders, "OAuthHeaders", new OAuthHeaders(accessToken, tokenType, expiresIn, refreshToken, expiresInRefreshToken));
         }
 
         private static void SetHeaders(ref Utf8JsonReader reader, AuthorizationHeaders authorizationHeaders)

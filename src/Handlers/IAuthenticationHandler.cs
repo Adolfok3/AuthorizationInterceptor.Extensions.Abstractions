@@ -1,4 +1,5 @@
 ﻿using AuthorizationInterceptor.Extensions.Abstractions.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AuthorizationInterceptor.Extensions.Abstractions.Handlers
@@ -11,14 +12,11 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Handlers
         /// <summary>
         /// Implementation of the authentication method.
         /// </summary>
-        /// <returns><see cref="AuthorizationHeaders"/></returns>
-        Task<AuthorizationHeaders?> AuthenticateAsync();
-
-        /// <summary>
-        /// Implementation of the non-authentication method called when authorization is expired. Most used for refresh token actions. If the integration does not have the refresh token option, the same value as the Authenticate method must be returned.
-        /// </summary>
-        /// <param name="expiredHeaders">Expired authorization headers previously provided in the authentication method</param>
-        /// <returns><see cref="AuthorizationHeaders" /></returns>
-        Task<AuthorizationHeaders?> UnauthenticateAsync(AuthorizationHeaders? expiredHeaders);
+        /// <param name="expiredHeaders">If a previous authentication was made, the expiredHeaders will be passed; otherwise, it will be null.
+        /// The expiredHeaders are mostly used to refresh tokens or to re-authenticate with previous header information.
+        /// </param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+        /// <returns>Returns a set of <see cref="AuthorizationHeaders"/> with authorized headers.</returns>
+        ValueTask<AuthorizationHeaders?> AuthenticateAsync(AuthorizationHeaders? expiredHeaders, CancellationToken cancellationToken);
     }
 }

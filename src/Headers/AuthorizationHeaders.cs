@@ -36,38 +36,48 @@ namespace AuthorizationInterceptor.Extensions.Abstractions.Headers
         public TimeSpan? GetRealExpiration()
             => ExpiresIn - (DateTimeOffset.UtcNow - AuthenticatedAt);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorizationHeaders"/> class with an optional expiration timespan.
+        /// </summary>
+        /// <param name="expiresIn">The optional expiration timespan for the authorization data.</param>
         public AuthorizationHeaders(TimeSpan? expiresIn = null)
         {
             ExpiresIn = expiresIn;
             AuthenticatedAt = DateTimeOffset.UtcNow;
         }
 
-        private AuthorizationHeaders(OAuthHeaders oAuthHeaders)
+        /// <summary>
+        /// Determines if the headers are still valid based on their expiration time.
+        /// </summary>
+        /// <returns>
+        /// <c>true</c> if the headers are valid or if there is no expiration time set; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsHeadersValid()
         {
-            AuthenticatedAt = DateTimeOffset.UtcNow;
-            OAuthHeaders = oAuthHeaders;
-            ExpiresIn = oAuthHeaders.ExpiresIn.HasValue ? TimeSpan.FromSeconds(oAuthHeaders.ExpiresIn.Value) : null;
-            Add("Authorization", $"{oAuthHeaders.TokenType} {oAuthHeaders.AccessToken}");
+            if (ExpiresIn is null || OAuthHeaders?.ExpiresIn is null)
+                return true;
+
+            var realExpiration = TimeSpan.FromSeconds(OAuthHeaders.ExpiresIn.Value);
+            return (realExpiration - (DateTimeOffset.UtcNow - AuthenticatedAt)) > TimeSpan.Zero;
         }
 
         public static implicit operator AuthorizationHeaders(OAuthHeaders headers)
         {
-            ValidateValue(nameof(headers.AccessToken), headers.AccessToken);
-            ValidateValue(nameof(headers.TokenType), headers.TokenType);
-            if (headers.ExpiresIn is <= 0)
-                throw new ArgumentException("ExpiresIn must be greater tha 0.");
-
+            headers.Validate();
             return new AuthorizationHeaders(headers);
         }
-        
+
+        private AuthorizationHeaders(OAuthHeaders oAuthHeaders)
+        {
+            AuthenticatedAt = DateTimeOffset.UtcNow;
+            OAuthHeaders = oAuthHeaders;
+            ExpiresIn = oAuthHeaders.GetRealTimeExpiration();
+
+            Add("Authorization", $"{oAuthHeaders.TokenType} {oAuthHeaders.AccessToken}");
+        }
+
         private AuthorizationHeaders()
         {
-        }
-        
-        private static void ValidateValue(string name, string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new ArgumentException($"Property '{name}' is required.");
         }
     }
 }
