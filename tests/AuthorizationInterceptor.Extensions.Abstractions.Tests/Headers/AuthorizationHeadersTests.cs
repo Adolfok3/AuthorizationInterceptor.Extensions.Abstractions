@@ -16,6 +16,70 @@ public class AuthorizationHeadersTests
         Assert.Empty(headers);
         Assert.NotEqual(DateTimeOffset.MinValue, headers.AuthenticatedAt);
     }
+    
+    [Fact]
+    public void IsHeadersValid_WithNullValues_ShouldReturnTrue()
+    {
+        //Arrange
+        var headers = new AuthorizationHeaders();
+        AuthorizationHeaders headersWithOauth = new OAuthHeaders("test", "test");
+
+        //Act & Assert
+        Assert.True(headers.IsHeadersValid());
+        Assert.True(headersWithOauth.IsHeadersValid());
+    }
+    
+    [Fact]
+    public void IsHeadersValid_WithValues_ShouldReturnTrue()
+    {
+        //Arrange
+        AuthorizationHeaders headers = new OAuthHeaders("test", "test", 100);
+
+        //Act & Assert
+        Assert.True(headers.IsHeadersValid());
+    }
+    
+    [Fact]
+    public async Task IsHeadersValid_WithValues_ShouldReturnFalse()
+    {
+        //Arrange
+        AuthorizationHeaders headers = new OAuthHeaders("test", "test", 1);
+
+        //Act
+        await Task.Delay(2);
+        
+        //Assert
+        Assert.True(headers.IsHeadersValid());
+    }
+    
+    [Fact]
+    public async Task GetRealExpiration_ShouldReturnExpired()
+    {
+        //Arrange
+        var headers = new AuthorizationHeaders(TimeSpan.FromSeconds(1));
+        
+        //Act
+        await Task.Delay(2);
+        
+        //Assert
+        Assert.Null(headers.OAuthHeaders);
+        Assert.Empty(headers);
+        Assert.NotEqual(DateTimeOffset.MinValue, headers.AuthenticatedAt);
+        Assert.NotEqual(TimeSpan.Zero, headers.GetRealExpiration());
+    }
+    
+    [Fact]
+    public void GetRealExpiration_ShouldReturnValid()
+    {
+        //Arrange
+        var headers = new AuthorizationHeaders(TimeSpan.FromSeconds(10));
+        
+        //Act & Assert
+        Assert.Null(headers.OAuthHeaders);
+        Assert.Empty(headers);
+        Assert.NotEqual(DateTimeOffset.MinValue, headers.AuthenticatedAt);
+        Assert.NotEqual(TimeSpan.FromSeconds(10), headers.GetRealExpiration());
+    }
 
     [Fact]
     public void CreateAuthorizationHeaders_WithProperties_ShouldContainsCorrectInformation()
